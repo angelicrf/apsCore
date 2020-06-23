@@ -1,26 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using UrlsAndRoutes.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using UrlsAndRoutes.Infrastructure;
 
 namespace UrlsAndRoutes.Controllers
 {
     public class HomeController : Controller
     {
-        public ViewResult Index() => View("Result",
-         new Result
-         {
-             Controller = nameof(HomeController),
-             Action = nameof(Index)
-         });
-        public ViewResult CustomVariable(string id)
+        public IActionResult Index()
         {
-            Result r = new Result
-            {
-                Controller = nameof(HomeController),
-                Action = nameof(CustomVariable),
-            };
-            r.Data["Id"] = id ?? "<no value>";
-            r.Data["Url"] = Url.Action("CustomVariable", "Home", new { id = 100 });
-            return View("Result", r);
+            return View("SimpleForm");
         }
+        //public ViewResult ReceiveForm()
+        //{
+        //    var name = Request.Form["name"];
+        //    var city = Request.Form["city"];
+        //    return View("Result", $"{name} lives in {city}");
+        //}
+        public ViewResult ReceiveForm(string name, string city)
+             => View("Result", $"{name} lives in the city called {city}");
     }
 }

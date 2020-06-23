@@ -1,4 +1,4 @@
-﻿@model string
+﻿@model IDictionary<string, string>
 @{ Layout = null; }
 <!DOCTYPE html>
 <html>
@@ -8,7 +8,12 @@
     <link rel="stylesheet" asp-href-include="~/lib/bootstrap/dist/css/*.min.css" />
 </head>
 <body class="m-1 p-1">
-    <h3 class="btn-info">Angelique Controllers</h3>
-    Model Data: @Model
+    <table class="table table-bordered table-sm table-striped">
+        <tr><th>Name</th><th>Value</th></tr>
+        @foreach (string key in Model.Keys)
+        {
+            <tr><td>@key</td><td>@Model[key]</td></tr>
+        }
+    </table>
 </body>
 </html>
