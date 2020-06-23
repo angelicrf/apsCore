@@ -20,7 +20,20 @@ namespace UrlsAndRoutes.Controllers
         //    var city = Request.Form["city"];
         //    return View("Result", $"{name} lives in {city}");
         //}
-        public ViewResult ReceiveForm(string name, string city)
-             => View("Result", $"{name} lives in the city called {city}");
+        //public ViewResult ReceiveForm(string name, string city)
+        //     => View("Result", $"{name} lives in the city called {city}");
+        [HttpPost]
+        public RedirectToActionResult ReceiveForm(string name, string city)
+        {
+             TempData["name"] = name;
+             TempData["city"] = city;
+                     return   RedirectToAction(nameof(Data));
+        }
+        public ViewResult Data()
+        {
+            string name = TempData["name"] as string;
+            string city = TempData["city"] as string;
+                    return View("Result", $"{name} lives in {city}");
+        }
     }
 }

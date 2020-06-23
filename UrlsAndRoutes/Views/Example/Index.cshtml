@@ -1,5 +1,4 @@
-﻿@model string
-@{ Layout = null; }
+﻿@{ Layout = null; }
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +7,8 @@
     <link rel="stylesheet" asp-href-include="~/lib/bootstrap/dist/css/*.min.css" />
 </head>
 <body class="m-1 p-1">
-    <h3 class="btn-info">Angelique Controllers</h3>
-    Model: @Model
+    @*Model: @(((DateTime)Model).DayOfWeek)*@
+    <p>The day is: @ViewBag.Date.DayOfWeek</p>
+    <p>The message is: @ViewBag.Message</p>
 </body>
 </html>
