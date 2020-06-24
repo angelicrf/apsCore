@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using UrlsAndRoutes.Controllers;
+using UrlsAndRoutes.Infrastructure;
 using UrlsAndRoutes.Models;
 using Xunit;
 
@@ -14,10 +15,12 @@ namespace XUnitTestProject1
             var data = new[] { new Product { Name = "Test", Price = 100 } };
             var mock = new Mock<IRepository>();
             mock.SetupGet(m => m.Products).Returns(data);
-            HomeController controller = new HomeController
-            {
-                Repository = mock.Object
-            };
+            //HomeController controller = new HomeController
+            //{
+            //    Repository = mock.Object
+            //};
+            TypeBroker.SetTestObject(mock.Object);
+            HomeController controller = new HomeController();
             ViewResult result = controller.Index();
             Assert.Equal(data, result.ViewData.Model);
         }
