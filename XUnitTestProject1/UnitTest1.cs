@@ -19,8 +19,9 @@ namespace XUnitTestProject1
             //{
             //    Repository = mock.Object
             //};
-            TypeBroker.SetTestObject(mock.Object);
-            HomeController controller = new HomeController();
+            //TypeBroker.SetTestObject(mock.Object);
+            //HomeController controller = new HomeController();
+            HomeController controller = new HomeController(mock.Object);
             ViewResult result = controller.Index();
             Assert.Equal(data, result.ViewData.Model);
         }

@@ -11,6 +11,7 @@ namespace UrlsAndRoutes.Controllers
         //public IRepository Repository { get; } = TypeBroker.Repository;
         private IRepository repository;
         public HomeController(IRepository repo) => repository = repo;
+
         public ViewResult Index() => View(repository.Products);
     }
 }
