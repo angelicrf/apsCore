@@ -10,7 +10,8 @@ namespace UrlsAndRoutes
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            TypeBroker.SetRepositoryType<AlternateRepository>();
+            //TypeBroker.SetRepositoryType<AlternateRepository>();
+            services.AddTransient<IRepository, MemoryRepository>();
             services.AddMvc();
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

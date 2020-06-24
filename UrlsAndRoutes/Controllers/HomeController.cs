@@ -8,7 +8,9 @@ namespace UrlsAndRoutes.Controllers
     {
         //public ViewResult Index() => View(new MemoryRepository().Products);
         //public IRepository Repository { get; set; } = new MemoryRepository();
-        public IRepository Repository { get; } = TypeBroker.Repository;
-        public ViewResult Index() => View(Repository.Products);
+        //public IRepository Repository { get; } = TypeBroker.Repository;
+        private IRepository repository;
+        public HomeController(IRepository repo) => repository = repo;
+        public ViewResult Index() => View(repository.Products);
     }
 }
