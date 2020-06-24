@@ -10,8 +10,17 @@ namespace UrlsAndRoutes.Controllers
         //public IRepository Repository { get; set; } = new MemoryRepository();
         //public IRepository Repository { get; } = TypeBroker.Repository;
         private IRepository repository;
-        public HomeController(IRepository repo) => repository = repo;
+        private ProductTotalizer totalizer;
+        public HomeController(IRepository repo, ProductTotalizer total)
+        {
+            repository = repo;
+            totalizer = total;
 
-        public ViewResult Index() => View(repository.Products);
+        }
+        public ViewResult Index()
+        {
+            ViewBag.Total = totalizer.Total;
+            return View(repository.Products);
+        }
     }
 }

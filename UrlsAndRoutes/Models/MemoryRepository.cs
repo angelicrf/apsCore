@@ -4,11 +4,14 @@ namespace UrlsAndRoutes.Models
 {
     public class MemoryRepository : IRepository
     {
-        private Dictionary<string, Product> products;
-        public MemoryRepository()
+        //private Dictionary<string, Product> products;
+        //public MemoryRepository()
+        //{
+        private IModelStorage storage;
+        public MemoryRepository(IModelStorage modelStore)
         {
-            products = new Dictionary<string, Product>();
-
+            storage = modelStore;
+            //products = new Dictionary<string, Product>();
             new List<Product> {
                     new Product { Name = "Kayak", Price = 275M },
                     new Product { Name = "Lifejacket", Price = 48.95M },
@@ -16,11 +19,11 @@ namespace UrlsAndRoutes.Models
                     }.ForEach(p => AddProduct(p));
 
         }
-        public IEnumerable<Product> Products => products.Values;
-        public Product this[string name] => products[name];
+        public IEnumerable<Product> Products => storage.Items;
+        public Product this[string name] => storage[name];
         public void AddProduct(Product product) =>
-        products[product.Name] = product;
+        storage[product.Name] = product;
         public void DeleteProduct(Product product) =>
-        products.Remove(product.Name);
+        storage.RemoveItem(product.Name);
     }
 }

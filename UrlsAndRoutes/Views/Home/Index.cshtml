@@ -30,10 +30,12 @@
             {
                 @foreach (var p in Model)
                 {
-                    <tr>
-                        <td>@p.Name</td>
-                        <td>@string.Format("{0:C2}", p.Price)</td>
-                    </tr>
+        <tr>
+            <td>@ViewBag.Total</td>
+            <td>@p.Name</td>
+            <td>@string.Format("{0:C2}", p.Price)</td>
+
+        </tr>
                 }
             }
         </tbody>

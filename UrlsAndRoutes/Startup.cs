@@ -12,6 +12,8 @@ namespace UrlsAndRoutes
         {
             //TypeBroker.SetRepositoryType<AlternateRepository>();
             services.AddTransient<IRepository, MemoryRepository>();
+            services.AddTransient<IModelStorage, DictionaryStorage>();
+            services.AddTransient<ProductTotalizer>();
             services.AddMvc();
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
