@@ -11,16 +11,20 @@
     @if (ViewData.Count > 0)
     {
         <table class="table table-bordered table-sm table-striped">
+
             @foreach (var kvp in ViewData)
             {
                 <tr><td>@kvp.Key</td><td>@kvp.Value</td></tr>
             }
         </table>
     }
+
     <table class="table table-bordered table-sm table-striped">
+
         <thead>
             <tr><th>Name</th><th>Price</th></tr>
         </thead>
+
         <tbody>
             @if (Model == null)
             {
@@ -30,12 +34,12 @@
             {
                 @foreach (var p in Model)
                 {
-        <tr>
-            <td>@ViewBag.Total</td>
-            <td>@p.Name</td>
-            <td>@string.Format("{0:C2}", p.Price)</td>
+                    <tr>
 
-        </tr>
+                        <td>@p.Name</td>
+                        <td>@string.Format("{0:C2}", p.Price)</td>
+
+                    </tr>
                 }
             }
         </tbody>

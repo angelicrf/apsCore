@@ -8,6 +8,8 @@ namespace UrlsAndRoutes.Models
         //public MemoryRepository()
         //{
         private IModelStorage storage;
+        private string guid = System.Guid.NewGuid().ToString();
+        public MemoryRepository () { }
         public MemoryRepository(IModelStorage modelStore)
         {
             storage = modelStore;
@@ -25,5 +27,9 @@ namespace UrlsAndRoutes.Models
         storage[product.Name] = product;
         public void DeleteProduct(Product product) =>
         storage.RemoveItem(product.Name);
+        public override string ToString()
+        {
+            return guid;
+        }
     }
 }

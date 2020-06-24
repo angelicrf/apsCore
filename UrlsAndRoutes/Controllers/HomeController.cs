@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UrlsAndRoutes.Infrastructure;
 using UrlsAndRoutes.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace UrlsAndRoutes.Controllers
 {
@@ -17,9 +17,14 @@ namespace UrlsAndRoutes.Controllers
             totalizer = total;
 
         }
-        public ViewResult Index()
+        public ViewResult Index([FromServices] ProductTotalizer totalizer)
         {
+            
+            IRepository repository = HttpContext.RequestServices.GetService<IRepository>();
+            ViewBag.ShowRepo = repository.ToString();
+            ViewBag.CalcTotal = totalizer.Repository.ToString();
             ViewBag.Total = totalizer.Total;
+
             return View(repository.Products);
         }
     }
