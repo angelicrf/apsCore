@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Routing.Constraints;
-using Microsoft.AspNetCore.Routing;
-
+using UrlsAndRoutes.Infrastructure;
+using UrlsAndRoutes.Models;
 
 namespace UrlsAndRoutes
 {
@@ -11,6 +10,7 @@ namespace UrlsAndRoutes
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            TypeBroker.SetRepositoryType<AlternateRepository>();
             services.AddMvc();
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
