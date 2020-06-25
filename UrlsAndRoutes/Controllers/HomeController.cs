@@ -1,31 +1,45 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UrlsAndRoutes.Models;
-using Microsoft.Extensions.DependencyInjection;
+using System;
+using UrlsAndRoutes.Infrastructure;
 
 namespace UrlsAndRoutes.Controllers
 {
+    [Profile]
+    [ViewResultDetails]
+    [RangeException]
     public class HomeController : Controller
     {
-        //public ViewResult Index() => View(new MemoryRepository().Products);
-        //public IRepository Repository { get; set; } = new MemoryRepository();
-        //public IRepository Repository { get; } = TypeBroker.Repository;
-        private IRepository repository;
-        private ProductTotalizer totalizer;
-        public HomeController(IRepository repo, ProductTotalizer total)
+        //public ViewResult Index() => View("Message","This is the Index action on the Home controller");
+        //public IActionResult Index()
+        //{
+        //    if (!Request.IsHttps)
+        //    {
+        //        return new StatusCodeResult(StatusCodes.Status403Forbidden);
+        //    }
+        //    else
+        //    {
+        //        return View("Message",
+        //        "This is the Index action on the Home controller");
+        //    }
+        //}
+        
+        public ViewResult Index() => View("Display","This is the Index action on the Home controller");
+    
+        public ViewResult SecondAction() => View("Display","This is the SecondAction action on the Home controller");
+        public ViewResult GenerateException(int? id)
         {
-            repository = repo;
-            totalizer = total;
-
-        }
-        public ViewResult Index([FromServices] ProductTotalizer totalizer)
-        {
-            
-            IRepository repository = HttpContext.RequestServices.GetService<IRepository>();
-            ViewBag.ShowRepo = repository.ToString();
-            ViewBag.CalcTotal = totalizer.Repository.ToString();
-            ViewBag.Total = totalizer.GetTotal;
-
-            return View(repository.Products);
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            else if (id > 10)
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+            else
+            {
+                return View("Display", $"The value is {id}");
+            }
         }
     }
 }

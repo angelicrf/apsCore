@@ -1,44 +1,44 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Moq;
 using System.Linq;
 using UrlsAndRoutes.Controllers;
 using UrlsAndRoutes.Infrastructure;
-using UrlsAndRoutes.Models;
 using Xunit;
 
 namespace XUnitTestProject1
 {
     public class UnitTest1
     {
-        //private IRepository rep;
-        //private IModelStorage storage;
-        public ProductTotalizer pt = new ProductTotalizer();
-        public MemoryRepository tg = new MemoryRepository();
-
         [Fact]
-        public void ControllerTest()
-        {           
-            var data = new[] { new Product { Name = "Test", Price = 100 } };
-            ProductTotalizer yh =  new ProductTotalizer { Total = 890 };
+        public void TestHttpsFilter()
+        {
 
-            var mock = new Mock<IRepository>();
-            mock.SetupGet(m => m.Products).Returns(data);
+            var httpRequest = new Mock<HttpRequest>();
 
-            //var mock2 = new Mock<ProductTotalizer>();
+            httpRequest.SetupSequence(m => m.IsHttps).Returns(true).Returns(false);
 
-            // mock2.Setup(t => t.Total).Returns(data[0].Price);
+            var httpContext = new Mock<HttpContext>();
 
-            //HomeController controller = new HomeController
-            //{
-            //    Repository = mock.Object
-            //};
-            //TypeBroker.SetTestObject(mock.Object);
-            //HomeController controller = new HomeController();
-            
-             HomeController controller = new HomeController(mock.Object,yh);
-             ViewResult result = controller.Index(yh);
+            httpContext.SetupGet(m => m.Request).Returns(httpRequest.Object);
 
-             Assert.Equal(result.ViewData.Model, result.ViewData.Model);
+            var actionContext = new ActionContext(httpContext.Object, new Microsoft.AspNetCore.Routing.RouteData(), new ActionDescriptor());
+
+            var authContext = new AuthorizationFilterContext(actionContext, Enumerable.Empty<IFilterMetadata>().ToList());
+
+            HttpsUseAttribute filter = new HttpsUseAttribute();
+
+            filter.OnAuthorization(authContext);
+
+            Assert.Null(authContext.Result);
+
+            filter.OnAuthorization(authContext);
+
+            Assert.IsType(typeof(StatusCodeResult), authContext.Result);
+
         }
     }
+
 }
