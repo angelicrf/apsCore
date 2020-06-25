@@ -23,7 +23,7 @@ namespace UrlsAndRoutes.Controllers
             IRepository repository = HttpContext.RequestServices.GetService<IRepository>();
             ViewBag.ShowRepo = repository.ToString();
             ViewBag.CalcTotal = totalizer.Repository.ToString();
-            ViewBag.Total = totalizer.Total;
+            ViewBag.Total = totalizer.GetTotal;
 
             return View(repository.Products);
         }

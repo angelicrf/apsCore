@@ -9,6 +9,7 @@ namespace UrlsAndRoutes.Models
         public ProductTotalizer() { }
         public ProductTotalizer(IRepository repo) => Repository = repo;
         public IRepository Repository { get; set; }
-        public decimal Total => Repository.Products.Sum(p => p.Price);
+        public decimal GetTotal => Repository.Products.Sum(p => p.Price);
+        public decimal Total { get; set; }
     }
 }
