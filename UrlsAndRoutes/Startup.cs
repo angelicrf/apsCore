@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using UrlsAndRoutes.Infrastructure;
+using UrlsAndRoutes.Models;
 
 namespace UrlsAndRoutes
 {
@@ -12,20 +12,8 @@ namespace UrlsAndRoutes
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddScoped<FilterDiagnostics, DefaultFilterDiagnostics>();
-            //services.AddSingleton<FilterDiagnostics, DefaultFilterDiagnostics>();
-            //services.AddSingleton<TimeFilter>();
-            //services.AddMvc();
-            services.AddScoped<FilterDiagnostics, DefaultFilterDiagnostics>();
-            services.AddScoped<TimeFilter>();
-            services.AddScoped<ViewResultDiagnostics>();
-            services.AddScoped<DiagnosticsFilter>();
-            services.AddMvc().AddMvcOptions(options => {
-                //options.Filters.AddService(typeof(ViewResultDiagnostics));
-                //options.Filters.AddService(typeof(DiagnosticsFilter));
-                options.Filters.Add(new
-                DisplayAttribute("This is the Globally-Scoped Filter"));
-            });
+            services.AddSingleton<IRepository, MemoryRepository>();
+            services.AddMvc();
         
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
