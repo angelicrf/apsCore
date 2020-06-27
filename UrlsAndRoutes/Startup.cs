@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http.Headers;
-using UrlsAndRoutes.Models;
+using UrlsAndRoutes.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace UrlsAndRoutes
 {
@@ -13,13 +13,15 @@ namespace UrlsAndRoutes
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IRepository, MemoryRepository>();
-            services.AddMvc().AddXmlDataContractSerializerFormatters()
-                .AddMvcOptions(opts => {
-                    opts.FormatterMappings.SetMediaTypeMappingForFormat("xml",new MediaTypeHeaderValue("application/xml").ToString());
-                    opts.RespectBrowserAcceptHeader = true;
-                    opts.ReturnHttpNotAcceptable = true;
-                });
+            services.AddMvc();
+            //services.Configure<MvcViewOptions>(options => {
+            //    options.ViewEngines.Clear();
+            //    options.ViewEngines.Insert(0, new DebugDataViewEngine());
+            //});
+            services.Configure<RazorViewEngineOptions>(options => {
+                options.ViewLocationExpanders.Add(new SimpleExpander());
+                options.ViewLocationExpanders.Add(new ColorExpander());
+            });
 
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

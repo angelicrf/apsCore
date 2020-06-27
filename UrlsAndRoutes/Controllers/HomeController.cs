@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using UrlsAndRoutes.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+
 
 namespace UrlsAndRoutes.Controllers
 {
     public class HomeController : Controller
     {
-        private IRepository repository { get; set; }
-        public HomeController(IRepository repo) => repository = repo;
-        public ViewResult Index() => View(repository.Reservations);
-        [HttpPost]
-        public IActionResult AddReservation(Reservation reservation)
-        {
-            repository.AddReservation(reservation);
-            return RedirectToAction("Index");
-        }
+        //public ViewResult Index()
+        //{
+        //    ViewBag.Message = "Hello, World";
+        //    ViewBag.Time = DateTime.Now.ToString("HH:mm:ss");
+        //    return View("DebugData");
+        //}
+        //public ViewResult Index() => View(new string[] { "Apple", "Orange", "Pear" });
+        public ViewResult Index() => View(new string[] { "Apple", "Orange", "Pear" });
+        public ViewResult List() => View();
+        public ViewResult Red() => View();
     }
 }
