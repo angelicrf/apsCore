@@ -1,0 +1,7 @@
+Invoke-RestMethod http://localhost:54972/api/reservation -Method POST -Body(@{clientName="Anne"; location="Meeting Room 4"} | ConvertTo-Json) -ContentType"application/json"
+Invoke-RestMethod http://localhost:54972/api/reservation -Method PUT -Body(@{reservationId="1"; clientName="Bob"; location="Media Room"} | ConvertTo-Json)-ContentType"application/json"
+Invoke-RestMethod http://localhost:54972/api/reservation/2 -Method PATCH -Body (@{ op="replace"; path="clientName"; value="Bob"},@{ op="replace"; path="location";value="Lecture Hall"} | ConvertTo-Json) -ContentType "application/json"
+Invoke-WebRequest http://localhost:54972/api/content/string | select @{n='Content-Type';e={ $_.Headers."Content-Type" }}, Content
+Invoke-WebRequest http://localhost:54972/api/content/object -Headers @{Accept="application/xml"} | select @{n='Content-Type';e={ $_.Headers."Content-Type" }}, Content
+(Invoke-WebRequest http://localhost:54972/api/content/object/xml).Headers."Content-Type"
+Invoke-WebRequest http://localhost:54972/api/content/object -Headers @{Accept="application/custom"}
