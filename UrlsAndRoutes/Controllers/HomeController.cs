@@ -11,7 +11,6 @@ namespace UrlsAndRoutes.Controllers
         //    ViewBag.Time = DateTime.Now.ToString("HH:mm:ss");
         //    return View("DebugData");
         //}
-        //public ViewResult Index() => View(new string[] { "Apple", "Orange", "Pear" });
         public ViewResult Index() => View(new string[] { "Apple", "Orange", "Pear" });
         public ViewResult List() => View();
         public ViewResult Red() => View();
