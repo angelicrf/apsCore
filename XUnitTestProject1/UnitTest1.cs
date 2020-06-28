@@ -14,6 +14,7 @@ namespace XUnitTestProject1
         public void TestSummary()
         {
             var mockRepository = new Mock<ICityRepository>();
+
             mockRepository.SetupGet(m => m.Cities).Returns(new List<City> {
                 new City { Population = 100 },
                 new City { Population = 20000 },
@@ -24,10 +25,10 @@ namespace XUnitTestProject1
             var viewComponent = new CitySummary(mockRepository.Object);
 
             ViewViewComponentResult result = viewComponent.Invoke(false) as ViewViewComponentResult;
+
             Assert.IsType(typeof(CityViewModel), result.ViewData.Model);
             Assert.Equal(4, ((CityViewModel)result.ViewData.Model).Cities);
-            Assert.Equal(1520100,
-            ((CityViewModel)result.ViewData.Model).Population);
+            Assert.Equal(1520100,((CityViewModel)result.ViewData.Model).Population);
         }
     }
 }
