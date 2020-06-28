@@ -6,25 +6,17 @@
     <link asp-href-include="~/lib/bootstrap/dist/css/*.min.css" rel="stylesheet" />
 </head>
 <body class="m-1 p-1">
-    @RenderSection("Header")
-    <div class="bg-info">
-        This is the Header part of the layout
+    <div class="bg-primary m-1 p-1">
+        <div class="row text-white">
+            <div class="col-7"><h1>Products</h1></div>
+            <div class="col-5">
+                @*@await Component.InvokeAsync(nameof(CitySummary))*@
+                @await Component.InvokeAsync("CitySummary", new { showList = true })
+                @await Component.InvokeAsync("ComboComponent")
+            </div>
+        </div>
     </div>
-    @RenderSection("body")
-    <div class="bg-info">
-        This is the body part of the layout
-    </div>
-    @if (IsSectionDefined("Footer"))
-    {
-        @RenderSection("Footer")
-    }
-    else
-    {
-        <h4>This is the default footer</h4>
-    }
-<div>
-    @RenderSection("scripts",false)
-</div>
-  
+    <div class="m-1 p-1">@RenderBody()</div>
+    @await Component.InvokeAsync("PageSize")
 </body>
 </html>

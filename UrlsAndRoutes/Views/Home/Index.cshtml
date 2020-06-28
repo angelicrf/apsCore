@@ -1,22 +1,20 @@
-﻿@model string[]
-@{ Layout = "_Layout"; }
-@section Header {
-    <div class="bg-success">
-        @foreach (string str in new[] { "Home", "List", "Edit" })
+﻿@model IEnumerable<UrlsAndRoutes.Models.Product>
+@{
+    ViewData["Title"] = "Products";
+    Layout = "_Layout";
+}
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+        <tr><th>Name</th><th>Price</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
         {
-            <a class="btn btn-sm btn-primary" asp-action="str">@str</a>
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+            </tr>
         }
-    </div>
-}
-@section Body {
-    This is a list of fruit names:
-    @foreach (string name in Model)
-    {
-        <span><b>@name</b></span>
-    }
-}
-@section Footer {
-    <div class="bg-success">
-        This is the footer
-    </div>
-}
+    </tbody>
+</table>
+<a asp-action="Create" class="btn btn-primary">Create</a>

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using UrlsAndRoutes.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
+using static UrlsAndRoutes.Models.ProductRepository;
+using static UrlsAndRoutes.Models.CityRepository;
 
 namespace UrlsAndRoutes
 {
@@ -13,15 +14,9 @@ namespace UrlsAndRoutes
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IProductRepository, MemoryProductRepository>();
+            services.AddSingleton<ICityRepository, MemoryCityRepository>();
             services.AddMvc();
-            //services.Configure<MvcViewOptions>(options => {
-            //    options.ViewEngines.Clear();
-            //    options.ViewEngines.Insert(0, new DebugDataViewEngine());
-            //});
-            services.Configure<RazorViewEngineOptions>(options => {
-                options.ViewLocationExpanders.Add(new SimpleExpander());
-                options.ViewLocationExpanders.Add(new ColorExpander());
-            });
 
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

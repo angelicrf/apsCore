@@ -1,18 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using UrlsAndRoutes.Models;
+using static UrlsAndRoutes.Models.ProductRepository;
 
 namespace UrlsAndRoutes.Controllers
 {
     public class HomeController : Controller
     {
-        //public ViewResult Index()
-        //{
-        //    ViewBag.Message = "Hello, World";
-        //    ViewBag.Time = DateTime.Now.ToString("HH:mm:ss");
-        //    return View("DebugData");
-        //}
-        public ViewResult Index() => View(new string[] { "Apple", "Orange", "Pear" });
-        public ViewResult List() => View();
-        public ViewResult Red() => View();
+        private IProductRepository repository;
+        public HomeController(IProductRepository repo)
+        {
+            repository = repo;
+        }
+        public ViewResult Index() => View(repository.Products);
+        public ViewResult Create() => View();
+        [HttpPost]
+        public IActionResult Create(Product newProduct)
+        {
+            repository.AddProduct(newProduct);
+            return RedirectToAction("Index");
+        }
+
     }
 }
