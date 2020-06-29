@@ -1,17 +1,19 @@
-﻿@model Product
-@{
-    ViewData["Title"] = "Create Product";
-    Layout = "_Layout";
-}
-<form method="post" asp-action="Create">
-    <div class="form-group">
-        <label asp-for="Name">Name:</label>
-        <input class="form-control" asp-for="Name" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Price">Price:</label>
-        <input class="form-control" asp-for="Price" />
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a class="btn btn-secondary" asp-action="Index">Cancel</a>
-</form>
+﻿@model UrlsAndRoutes.Models.City
+@{ Layout = "_Layout"; }
+    <form method="post" action="/Home/Create">
+        <div class="form-group">
+            <label for="Name">Name:</label>
+            <input class="form-control" name="Name" />
+        </div>
+        <div class="form-group">
+            <label for="Country">Country:</label>
+            <input class="form-control" name="Country" />
+        </div>
+        <div class="form-group">
+            <label for="Population">Population:</label>
+            <input class="form-control" asp-for="Population" />
+        </div>
+
+        <button type="submit" bs-button-color="danger">Add</button>
+        <a class="btn btn-primary" href="/Home/Index">Cancel</a>
+    </form>

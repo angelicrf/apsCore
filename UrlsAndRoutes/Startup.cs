@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc.Razor;
-using static UrlsAndRoutes.Models.ProductRepository;
-using static UrlsAndRoutes.Models.CityRepository;
+using UrlsAndRoutes.Models;
 
 namespace UrlsAndRoutes
 {
@@ -14,8 +12,7 @@ namespace UrlsAndRoutes
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IProductRepository, MemoryProductRepository>();
-            services.AddSingleton<ICityRepository, MemoryCityRepository>();
+            services.AddSingleton<IRepository, MemoryRepository>();
             services.AddMvc();
 
         }
