@@ -2,6 +2,8 @@
 
 namespace UrlsAndRoutes.Infrastructure.TagHelpers
 {
+    [HtmlTargetElement("button", Attributes = "bs-button-color", ParentTag = "form")]
+    [HtmlTargetElement("a", Attributes = "bs-button-color", ParentTag = "form")]
     public class ButtonTagHelper : TagHelper
     {
         public string BsButtonColor { get; set; }
