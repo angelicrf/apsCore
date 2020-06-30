@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UrlsAndRoutes</title>
+    <script asp-src-include="~/lib/jquery/*.js"></script>
+    <link rel="stylesheet"
+          asp-href-include="~/lib/bootstrap/dist/**/*.min.css"
+          asp-href-exclude="**/*-reboot*,**/*-grid*" />
+    @RenderSection("scripts", false)
+</head>
+<body class="m-1 p-1">
+    <div showaction-="Index" class="m-1 p-1 bg-danger">
+        <h4>Angelique models binding</h4>
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using UrlsAndRoutes.Models;
+using static UrlsAndRoutes.Models.Repository;
 
 namespace UrlsAndRoutes
 {
@@ -23,7 +24,11 @@ namespace UrlsAndRoutes
                 app.UseStatusCodePages();
                 app.UseDeveloperExceptionPage();
                 app.UseStaticFiles();
-                app.UseMvcWithDefaultRoute();
+                app.UseMvc(routes => {
+                    routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+                });
             //});
         }
     }
