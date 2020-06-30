@@ -18,10 +18,13 @@ namespace UrlsAndRoutes
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseStatusCodePages();
-            app.UseDeveloperExceptionPage();
-            app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
+            //app.Map("/mvcapp", appBuilder =>
+            //{
+                app.UseStatusCodePages();
+                app.UseDeveloperExceptionPage();
+                app.UseStaticFiles();
+                app.UseMvcWithDefaultRoute();
+            //});
         }
     }
 }
