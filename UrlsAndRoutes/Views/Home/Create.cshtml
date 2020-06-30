@@ -1,25 +1,24 @@
 ﻿@model UrlsAndRoutes.Models.City
 @{ Layout = "_Layout"; }
-    <form method="post">
+    <form method="post" asp-controller="Home" asp-action="Create" asp-antiforgery="true">
         <div class="form-group">
-            <label helper-for="Name" />
-            <input helper-for="Name" />
+            <label for="Name">Name:</label>
+            <input class="form-control" asp-for="Name" />
         </div>
         <div class="form-group">
-            <label helper-for="Country" />
-            <input helper-for="Country" />
+            <label for="Country">Country:</label>
+            <select class="form-control" model-for="Country" >
+                <option disabled selected value="">Select a Country</option>
+            </select>
         </div>
         <div class="form-group">
-            <label helper-for="Population" />
-            <input helper-for="Population" />
+            <label for="Population">Population:</label>
+            <input class="form-control" asp-for="Population" />
         </div>
-
-        @*<button type="submit" bs-button-color="danger">Add</button>
-        <button type="reset" bs-button-color="primary">Reset</button>*@
-    <div>
-        <formbutton type="submit" bg-color="danger" />
-        <formbutton type="reset" />
-         <a theme="info" href="/Home/Index">Cancel</a>
-      
-    </div>
+        <div class="form-group">
+            <label asp-for="Notes"></label>
+            <textarea class="form-control" asp-for="Notes"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add</button>
+        <a class="btn btn-primary" href="/Home/Index">Cancel</a>
     </form>
