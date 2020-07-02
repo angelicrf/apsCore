@@ -13,13 +13,15 @@ namespace UrlsAndRoutes
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppIdentityDbContext>(options =>
-            options.UseSqlServer(Configuration["Data:SportStoreIdentity:ConnectionString"]));
-
+            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:SportStoreIdentity:ConnectionString"]));
+            services.AddTransient<IPasswordValidator<AppUser>,CustomPasswordValidator>();
+            services.AddTransient<IUserValidator<AppUser>,CustomUserValidator>();
             //services.AddIdentity<AppUser, IdentityRole>()
             //        .AddEntityFrameworkStores<AppIdentityDbContext>()
             //        .AddDefaultTokenProviders();
             services.AddIdentity<AppUser, IdentityRole>(opts => {
+                opts.User.RequireUniqueEmail = true;
+                opts.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 opts.Password.RequiredLength = 6;
                 opts.Password.RequireNonAlphanumeric = false;
                 opts.Password.RequireLowercase = false;
