@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using UrlsAndRoutes.Models;
 
 namespace UrlsAndRoutes.Controllers
 {
+    [Authorize(Roles = "Admins")]
     public class AdminController : Controller
     {
         private UserManager<AppUser> userManager;
@@ -18,6 +20,10 @@ namespace UrlsAndRoutes.Controllers
             passwordValidator = passValid;
             passwordHasher = passwordHash;
         }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
         public ViewResult Index() => View(userManager.Users);
         public ViewResult Create() => View();
         [HttpPost]

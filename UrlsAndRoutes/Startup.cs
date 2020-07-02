@@ -16,6 +16,7 @@ namespace UrlsAndRoutes
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:SportStoreIdentity:ConnectionString"]));
             services.AddTransient<IPasswordValidator<AppUser>,CustomPasswordValidator>();
             services.AddTransient<IUserValidator<AppUser>,CustomUserValidator>();
+            services.ConfigureApplicationCookie(opts => opts.LoginPath = "/Users/Login");
             //services.AddIdentity<AppUser, IdentityRole>()
             //        .AddEntityFrameworkStores<AppIdentityDbContext>()
             //        .AddDefaultTokenProviders();
@@ -39,6 +40,7 @@ namespace UrlsAndRoutes
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
+            //AppIdentityDbContext.CreateAdminAccount(app.ApplicationServices,Configuration).Wait();
         }
     }
 }
