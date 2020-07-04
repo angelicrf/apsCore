@@ -1,19 +1,21 @@
 ﻿@model UrlsAndRoutes.Models.LoginModel
-<div class="bg-primary m-1 p-1 text-white"><h4>Log In</h4></div>
-<div class="text-danger" asp-validation-summary="All"></div>
-<form asp-action="Login" method="post">
-    <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
-    </div>
-    <button class="btn btn-primary" type="submit">Log In</button>
-    <a class="btn btn-info" asp-action="GoogleLogin"
-       asp-route-returnUrl="@ViewBag.returnUrl">
-        Log In With Google
-    </a>
-</form>
+    <meta name="google-signin-client_id" content="95719071149-i7k9i69nj6qv2ffqf335hoc8o9np0di5.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <div class="bg-primary m-1 p-1 text-white"><h4>Log In</h4></div>
+    <div class="text-danger" asp-validation-summary="All"></div>
+    <form asp-action="Login" method="post">
+        <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+        </div>
+        <button class="btn btn-primary" type="submit">Log In</button>
+        <a class="btn btn-info" asp-action="GoogleLogin"
+           asp-route-returnUrl="@ViewBag.returnUrl">
+            Log In With Google
+        </a>
+    </form>
