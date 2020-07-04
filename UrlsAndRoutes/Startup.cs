@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
+using UrlsAndRoutes.Infrastructure;
 using UrlsAndRoutes.Models;
 
 namespace UrlsAndRoutes
@@ -17,6 +21,34 @@ namespace UrlsAndRoutes
             services.AddTransient<IPasswordValidator<AppUser>,CustomPasswordValidator>();
             services.AddTransient<IUserValidator<AppUser>,CustomUserValidator>();
             services.ConfigureApplicationCookie(opts => opts.LoginPath = "/Users/Login");
+            services.AddSingleton<IClaimsTransformation,LocationClaimsProvider>();
+            services.AddTransient<IAuthorizationHandler, BlockUsersHandler>();
+            services.AddTransient<IAuthorizationHandler, DocumentAuthorizationHandler>();
+
+            services.AddAuthorization(opts => {
+                opts.AddPolicy("DCUsers", policy => {
+                    policy.RequireRole("Users");
+                    policy.RequireClaim(ClaimTypes.StateOrProvince, "DC");
+                });
+                opts.AddPolicy("NotBob", policy => {
+                    policy.RequireAuthenticatedUser();
+                    policy.AddRequirements(new BlockUsersRequirement("Bob"));
+                });
+                opts.AddPolicy("AuthorsAndEditors", policy => {
+                    policy.AddRequirements(new DocumentAuthorizationRequirement
+                    {
+                        AllowAuthors = true,
+                        AllowEditors = true
+                    });
+                });
+            });
+            services.AddAuthentication().AddGoogle(opts => {
+                opts.ClientId = Configuration["Authentication:Google:ClientId"];
+                opts.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+
+                //opts.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v1/certs";
+
+            });
             //services.AddIdentity<AppUser, IdentityRole>()
             //        .AddEntityFrameworkStores<AppIdentityDbContext>()
             //        .AddDefaultTokenProviders();
