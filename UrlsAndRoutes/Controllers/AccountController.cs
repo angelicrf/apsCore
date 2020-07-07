@@ -32,7 +32,7 @@ namespace UrlsAndRoutes.Controllers
         {
             return View();
         }
-      
+
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
@@ -47,7 +47,6 @@ namespace UrlsAndRoutes.Controllers
 
             //ViewBag.returnUrl = returnUrl;
             details.ReturnUrl = returnUrl;
-           // details.ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
@@ -69,7 +68,6 @@ namespace UrlsAndRoutes.Controllers
         }
 
         [AllowAnonymous]
-        //[HttpPost]
         public IActionResult GoogleLogin(string returnUrl = "/")
         {
 
@@ -77,16 +75,14 @@ namespace UrlsAndRoutes.Controllers
 
             var redirectUrl = Url.Action(nameof(GoogleResponse), "Account", new { returnUrl });
             var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
-            
+
             return new ChallengeResult("Google", properties);
 
         }
-
         [AllowAnonymous]
-        //[HttpGet]
         public async Task<IActionResult> GoogleResponse(string returnUrl = null)
         {
-            
+
             ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync(userManager.GetUserId(User));
 
             if (info == null)
@@ -95,46 +91,46 @@ namespace UrlsAndRoutes.Controllers
             }
             var result = await signInManager.ExternalLoginSignInAsync("Google", info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
 
-                if (result.Succeeded)
-                {
-                    return Redirect(returnUrl);
+            if (result.Succeeded)
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
 
-                    //    [AllowAnonymous]
-                    //public IActionResult Login(string returnUrl)
-                    //{
-                    //    ViewBag.returnUrl = returnUrl;
-                    //    return View();
-                    //}
-                    //[HttpPost]
-                    //[AllowAnonymous]
-                    //[ValidateAntiForgeryToken]
-                    //public async Task<IActionResult> Login(LoginModel details, string returnUrl)
-                    //{
-                    //    return View(details);
-                    //}
-                }
-                else
-                {
-                    AppUser user = new AppUser
-                    {
-                        Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+                string[] userInfo = {
+                                      info.Principal.FindFirst(ClaimTypes.Name).Value,
+                                      info.Principal.FindFirst(ClaimTypes.Email).Value
+                                     };
 
-                        UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
-                    };
-                    IdentityResult identResult = await userManager.CreateAsync(user);
+                string getName = userInfo[0].ToString();
+                string getFirstName = getName.Substring(0, getName.IndexOf(" "));
+                string getEmail = userInfo[1].ToString().ToLower();
+
+                var user2 = new AppUser()
+                {
+                    UserName = getFirstName,
+                    Email = getEmail
+                };
+
+                IdentityResult identResult = await userManager.CreateAsync(user2);
+
+                //A new User from google is added to the database as well
+
+                if (identResult.Succeeded)
+                {
+
+                    identResult = await userManager.AddLoginAsync(user2, info);
 
                     if (identResult.Succeeded)
                     {
-                        identResult = await userManager.AddLoginAsync(user, info);
+                        await signInManager.SignInAsync(user2, false);
+                        return View(userInfo);
 
-                        if (identResult.Succeeded)
-                        {
-                                await signInManager.SignInAsync(user, false);
-                            return Redirect(returnUrl);
-                        }
                     }
-                    return AccessDenied();
                 }
+                return AccessDenied();
             }
+        }
     }
 }
