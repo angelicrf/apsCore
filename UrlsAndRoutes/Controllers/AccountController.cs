@@ -1,17 +1,25 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UrlsAndRoutes.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http.Authentication;
+using System.Linq;
 
 namespace UrlsAndRoutes.Controllers
 {
     public class AccountController : Controller
     {
+
         private UserManager<AppUser> userManager;
         private SignInManager<AppUser> signInManager;
 
+        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr)
+        {
+            userManager = userMgr;
+            signInManager = signinMgr;
+        }
         [Authorize]
         public async Task<IActionResult> Logout()
         {
@@ -24,11 +32,7 @@ namespace UrlsAndRoutes.Controllers
         {
             return View();
         }
-        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr)
-        {
-            userManager = userMgr;
-            signInManager = signinMgr;
-        }
+      
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
@@ -40,7 +44,11 @@ namespace UrlsAndRoutes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel details, string returnUrl)
         {
+
             //ViewBag.returnUrl = returnUrl;
+            details.ReturnUrl = returnUrl;
+           // details.ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 AppUser user = await userManager.FindByEmailAsync(details.Email);
@@ -59,28 +67,33 @@ namespace UrlsAndRoutes.Controllers
             }
             return View(details);
         }
-        [AllowAnonymous]
-        public IActionResult GoogleLogin(string returnUrl)
-        {
-            //ViewBag.returnUrl = returnUrl;
-            string redirectUrl = Url.Action("GoogleResponse", "Account",new { ReturnUrl = returnUrl });
 
-                var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
-                 
+        [AllowAnonymous]
+        //[HttpPost]
+        public IActionResult GoogleLogin(string returnUrl = "/")
+        {
+
+            //ViewBag.returnUrl = returnUrl;
+
+            var redirectUrl = Url.Action(nameof(GoogleResponse), "Account", new { returnUrl });
+            var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+            
             return new ChallengeResult("Google", properties);
 
         }
-       
-        [AllowAnonymous]
-        public async Task<IActionResult> GoogleResponse(string returnUrl = "/")
-        {
-            ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync();
 
-                if (info == null)
-                {
-                    return RedirectToAction(nameof(Login));
-                }
-                var result = await signInManager.ExternalLoginSignInAsync("Google", info.ProviderKey, false);
+        [AllowAnonymous]
+        //[HttpGet]
+        public async Task<IActionResult> GoogleResponse(string returnUrl = null)
+        {
+            
+            ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync(userManager.GetUserId(User));
+
+            if (info == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            var result = await signInManager.ExternalLoginSignInAsync("Google", info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
 
                 if (result.Succeeded)
                 {

@@ -1,7 +1,9 @@
 ﻿@model UrlsAndRoutes.Models.LoginModel
     <meta name="google-signin-client_id" content="95719071149-i7k9i69nj6qv2ffqf335hoc8o9np0di5.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <div class="bg-primary m-1 p-1 text-white"><h4>Log In</h4></div>
+    <div class="bg-primary m-1 p-1 text-white">
+    <h4>Log In</h4>
+    </div>
     <div class="text-danger" asp-validation-summary="All"></div>
     <form asp-action="Login" method="post">
         <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
@@ -14,8 +16,20 @@
             <input asp-for="Password" class="form-control" />
         </div>
         <button class="btn btn-primary" type="submit">Log In</button>
-        <a class="btn btn-info" asp-action="GoogleLogin"
-           asp-route-returnUrl="@ViewBag.returnUrl">
-            Log In With Google
-        </a>
     </form>
+    <div class="col-md-6">
+        <h1> Log In With Google</h1>
+        @*@{
+            if (Model.ExternalLogins.Count == 0)
+            {
+                <div>No external login configured</div>
+            }
+        }*@
+       <form method="post" asp-action="GoogleLogin" asp-route-returnUrl="@ViewBag.returnUrl">
+        <div><button type="submit" class="btn-danger">
+                  login Google
+             </button>
+        </div></form>
+
+
+    </div>

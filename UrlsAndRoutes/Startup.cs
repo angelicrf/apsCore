@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using EO.Internal;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Owin.Security.Google;
 using System.Security.Claims;
 using UrlsAndRoutes.Infrastructure;
 using UrlsAndRoutes.Models;
@@ -13,6 +17,8 @@ namespace UrlsAndRoutes
 {
     public class Startup
     {
+        public Microsoft.AspNetCore.Http.PathString CallbackPath { get; set; }
+
         public Startup(IConfiguration configuration) => Configuration = configuration;
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
@@ -24,6 +30,7 @@ namespace UrlsAndRoutes
             services.AddSingleton<IClaimsTransformation,LocationClaimsProvider>();
             services.AddTransient<IAuthorizationHandler, BlockUsersHandler>();
             services.AddTransient<IAuthorizationHandler, DocumentAuthorizationHandler>();
+          
 
             services.AddAuthorization(opts => {
                 opts.AddPolicy("DCUsers", policy => {
@@ -42,13 +49,37 @@ namespace UrlsAndRoutes
                     });
                 });
             });
-            services.AddAuthentication().AddGoogle(opts => {
+            services.AddAuthentication().AddGoogle("Google",opts =>
+            {
+                IConfigurationSection googleAuthNSection =
+                Configuration.GetSection("Authentication:Google");
+
+
+                //opts.CallbackPath = new PathString($"/{CallbackPath}");
                 opts.ClientId = Configuration["Authentication:Google:ClientId"];
                 opts.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                opts.SignInScheme = IdentityConstants.ExternalScheme;
+                //opts.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                //opts.SignInScheme = IdentityConstants.Ex
 
-                //opts.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v1/certs";
+                opts.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v1/certs";
+                opts.ClaimActions.Clear();
+                opts.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+                opts.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+                opts.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");
+                opts.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
+                opts.ClaimActions.MapJsonKey("urn:google:profile", "link");
+                opts.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
 
             });
+            var google = new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "95719071149-i7k9i69nj6qv2ffqf335hoc8o9np0di5.apps.googleusercontent.com",
+                ClientSecret = "kKDCqK9zv-Yq4g3YGG0q2u3T",
+                Provider = new GoogleOAuth2AuthenticationProvider()
+            };
+            google.Scope.Add("email");
+           // app.UseGoogleAuthentication(google);
             //services.AddIdentity<AppUser, IdentityRole>()
             //        .AddEntityFrameworkStores<AppIdentityDbContext>()
             //        .AddDefaultTokenProviders();
@@ -65,6 +96,7 @@ namespace UrlsAndRoutes
 
             services.AddMvc();
         }
+    
         public void Configure(IApplicationBuilder app)
         {
             app.UseStatusCodePages();
@@ -72,6 +104,14 @@ namespace UrlsAndRoutes
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
+          
+            
+            app.UseCookiePolicy(new CookiePolicyOptions()
+            {
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always,
+                MinimumSameSitePolicy = SameSiteMode.Strict
+            });
             //AppIdentityDbContext.CreateAdminAccount(app.ApplicationServices,Configuration).Wait();
         }
     }
