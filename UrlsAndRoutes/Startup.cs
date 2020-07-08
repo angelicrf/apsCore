@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using UrlsAndRoutes.Infrastructure;
 
 namespace UrlsAndRoutes
 {
@@ -12,7 +13,11 @@ namespace UrlsAndRoutes
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddSingleton<UserAgentComparer>();
+            services.AddMvc().AddMvcOptions(options => {
+                //options.Conventions.Add(new ActionNamePrefixAttribute("Do"));
+                //options.Conventions.Add(new AdditionalActionsAttribute());
+            });
         }
 
         public void Configure(IApplicationBuilder app)
